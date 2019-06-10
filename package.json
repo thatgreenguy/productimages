@@ -1,0 +1,36 @@
+{
+  "name": "productimages",
+  "version": "1.0.0",
+  "description": "Product Images Rest API",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thatgreenguy/productimages.git"
+  },
+  "keywords": [
+    "Dlink",
+    "product",
+    "images",
+    "node",
+    "rest",
+    "api"
+  ],
+  "author": "thatgreenguy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thatgreenguy/productimages/issues"
+  },
+  "homepage": "https://github.com/thatgreenguy/productimages#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongodb": "^2.2.16"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
