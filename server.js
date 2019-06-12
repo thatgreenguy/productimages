@@ -1,12 +1,16 @@
 const express = require('express');
-const bodyparser = require('body-parser');
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+
 const {api_port} = require('./app/config');
+const db = require('./app/database');
 
 const app = express();
 
-app.use(bodyparser.urlencoded({ extended: true }) );
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressValidator());
 
-require('./app/routes')(app, {});
+require('./app/routes')(app, db);
 
 app.listen(api_port, () => { console.log('Listening on port: ' + api_port); });
 
