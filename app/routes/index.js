@@ -1,9 +1,7 @@
-const pingRoutes = require('./ping_routes');
-const imageRoutes = require('./image_routes');
+const router = require('express').Router();
 
-module.exports = function(app, db) {
+router.use('/ping', require('./ping'));
+router.use('/images', require('./images'));
+router.use('/products', require('./products'));
 
-  pingRoutes(app, db);
-  imageRoutes(app, db);
-
-};
+module.exports = router;

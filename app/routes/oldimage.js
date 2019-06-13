@@ -27,13 +27,20 @@ module.exports = function(app, db) {
     })
   });
 
-  app.get('/image', [
-   ], (req, res) => {
+  app.get('/image/:product', [
+      check('product', 'Product code is required.').isLength({min:1}),    
+      check('product', 'Product code should be no more than 25 characters.').isLength({max:25})    
+    ], (req, res) => {
 
-console.log('REQ params: ' + JSON.stringify(req.params))
-console.log('REQ query: ' + JSON.stringify(req.query))
+    const errors = validationResult(req);
 
-    const product = typeof req.query.product === 'string' ? req.query.product.trim() : "";
+    if ( !errors.isEmpty()) {
+      return res.status(400).json({errors: errors.array() });
+    }
+
+    const product = typeof req.params.product === 'string' ? req.params.product.trim() : "";
+
+console.log('Product: ' + product);
 
     db.query( 'SELECT * FROM images WHERE product = $1;', [product])
     .then(result => {
@@ -44,5 +51,7 @@ console.log('REQ query: ' + JSON.stringify(req.query))
       res.status(500).send({error: JSON.stringify(e)});
     })
   })
+
+
 
 };
