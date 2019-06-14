@@ -21,7 +21,10 @@ middleware.checkMethod = () => {
 
 //method should be checked according to route
 console.log('method: ' + req.method)    
-console.log('url: ' + req.originalUrl)    
+console.log('orig url: ' + req.originalUrl)    
+console.log('url: ' + req.url)    
+console.log('base url: ' + req.baseUrl)    
+console.log('path url: ' + req.path)    
 
     console.log('check Method is valid: ');
 
