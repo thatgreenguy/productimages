@@ -1,3 +1,5 @@
+const {api_base} = require('../config');
+
 middleware = {};
 
 middleware.logReq = () => {
@@ -11,7 +13,18 @@ middleware.logReq = () => {
 middleware.checkMethod = () => {
 
   return (req, res, next) => {
+
+
+// Depending on route need to check method to see if allowed or not
+// drop the api_base and any query parameters from the url to get the route
+// fetch the allowed methods from array by route
+
+//method should be checked according to route
+console.log('method: ' + req.method)    
+console.log('url: ' + req.originalUrl)    
+
     console.log('check Method is valid: ');
+
     next(); 
   }
 };
