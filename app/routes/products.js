@@ -1,8 +1,22 @@
 const router = require('express').Router();
+const database = require('../database')
+const helpers = require('../helpers')
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
 
-  res.send({message: 'product list'});
+  let payload = {}
+
+  try {
+
+    dbData = await database.listProducts()
+
+    payload.rowCount = dbData.rowCount
+    payload.data = dbData.rows
+    res.status(200).send( payload );    
+
+  } catch ( err ) {
+    helpers.errorPayload( err, res );
+  }
 
 });
 

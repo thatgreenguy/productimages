@@ -1,24 +1,24 @@
 const router = require('express').Router();
-const middleware = require('../middleware');
-const {check, body, parms, query, validationResult} = require('express-validator/check');
+const {check, body, parms, query} = require('express-validator/check');
+const helpers = require('../helpers');
 
-router.get('/:product', middleware.checkMethod(), middleware.sanitize(), middleware.validate(),
+const validate = [
   check('product')
-  .isLength({ min:1, max:25 }).withMessage('Product code should be supplied with length 1-25 characters.')
-  .isAlphanumeric().withMessage('Product code should be alpha numeric e.g. DIR-615/E'),
+  .not().isEmpty().withMessage('Product code required.')
+  .isLength({ min:1, max:25 }).withMessage('Product code must be 1-25 characters.'),
+]
 
-  (req, res) => {
+router.get('/', validate, (req, res) => {
 
-    let errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json(errors.array());
-    } else {
+    if ( !helpers.validationErrors(req, res) ) {
 
-let product = req.params.product;
-console.log('what : '+ product)
+      let product = req.query.product;
+      let filter = req.query.filter;
 
-      res.send({message: 'image and product'});
+      console.log('product : '+ product)
+      console.log('filter : '+ filter)
 
+      res.status(200).send({message: 'image and product'});
     }
 
 });

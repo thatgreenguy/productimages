@@ -13,6 +13,7 @@ if(!process.env.PGUSER) process.env.PGUSER = 'postgres';
 const configuration = {
   api_port: process.env.API_PORT || 8080,
   api_base: process.env.API_BASE || '/api/v1/productimages/',
+  node_env: process.env.NODE_ENV || 'development',
   db_host: process.env.PGHOST,
   db_port: process.env.PGPORT,
   db_database: process.env.PGDATABASE,
@@ -25,6 +26,7 @@ console.log('Configuration: ' + JSON.stringify(configuration) )
 module.exports = {
   api_port: process.env.API_PORT || 8080,
   api_base: process.env.API_BASE || '/api/v1/productimages/',
+  node_env: process.env.NODE_ENV || 'development',
   db_host: process.env.PGHOST,
   db_port: process.env.PGPORT,
   db_database: process.env.PGDATABASE,
