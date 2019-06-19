@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
 
     payload.rowCount = dbData.rowCount
     payload.data = dbData.rows
-    res.status(200).send( payload );    
+    res.status(200).send( {success: payload} );    
 
   } catch ( err ) {
     helpers.errorPayload( err, res );

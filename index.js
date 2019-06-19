@@ -10,6 +10,7 @@ const swaggerSpec = yaml.load('./swagger.yaml');
 const routes = require('./app/routes');
 const middleware = require('./app/middleware');
 const {api_base, api_port} = require('./app/config');
+const swaggerPath = api_base + 'docs';
 
 const app = express();
 
@@ -19,9 +20,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(morgan('combined'));
 app.use(expressValidator());
-app.use(api_base + '/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-
 app.use(api_base, routes);
 
-app.listen(api_port, () => { console.log('Listening on port: ' + api_port); });
+app.use(swaggerPath, swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+app.get(swaggerPath, (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.status(200).json(swaggerSpec);
+});
+
+
+app.listen(api_port, () => { 
+  console.log('Listening on port: ' + api_port);
+  console.log('API Docs available: ../docs');
+ });
 

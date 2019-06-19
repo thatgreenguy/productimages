@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {check, body, parms, query} = require('express-validator/check');
+const {check, query} = require('express-validator/check');
 const helpers = require('../helpers');
 
 const validate = [
@@ -14,9 +14,6 @@ router.get('/', validate, (req, res) => {
 
       let product = req.query.product;
       let filter = req.query.filter;
-
-      console.log('product : '+ product)
-      console.log('filter : '+ filter)
 
       res.status(200).send({message: 'image and product'});
     }
