@@ -30,4 +30,11 @@ helpers.validationErrors = function( req, res ) {
 
 }
 
+helpers.returnArrayOfWords = function( keywords ) {
+
+  let words = keywords.split(' ');
+  return words.map((word) => word.trim()).filter((word) => { return word.length });
+
+}
+
 module.exports = helpers;

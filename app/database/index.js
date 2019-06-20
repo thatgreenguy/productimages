@@ -36,11 +36,20 @@ database.listProducts = function() {
   });
 };
 
-database.listImageUrls = function(product) {
+database.listImageUrls = function(product, filters) {
   return new Promise( async (resolve, reject) => {
 
-    let sql = 'SELECT * FROM images WHERE product = $1;'
     try {
+
+      let sql = 'SELECT * FROM images WHERE product = $1';
+
+      filters.forEach( word => {
+        sql = sql + ` AND meta like '%${word}%' `;
+      });      
+      sql = sql + ';';
+
+      console.debug('SQL: ', sql);
+
       pool.query(sql, [product])
       .then(res => { resolve( res ) })
       .catch(err => { reject( err ) })
