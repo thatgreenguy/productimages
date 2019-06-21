@@ -20,7 +20,7 @@ router.get('/', [
         payload.rowCount = dbData.rowCount;
         payload.rows = dbData.rows;
 
-        res.status(200).send( {success: payload} );
+        res.status(200).json( {success: payload} );
       }
 
     } catch ( err ) {
@@ -43,7 +43,7 @@ router.delete('/:id', [
         if ( dbData.rowCount == 0 ) {
           helpers.errorPayload('Delete request failed - check ID', res, 422);
         } else {
-          res.status(204).send( {success: {} } );
+          res.status(204).end();
         }
       }
 
