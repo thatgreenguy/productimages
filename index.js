@@ -2,7 +2,6 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
-const expressValidator = require('express-validator');
 const yaml = require('yamljs');
 const swaggerUI = require('swagger-ui-express');
 const swaggerSpec = yaml.load('./swagger.yaml');
@@ -19,7 +18,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(morgan('combined'));
-app.use(expressValidator());
 app.use(api_base, routes);
 
 app.use(swaggerPath, swaggerUI.serve, swaggerUI.setup(swaggerSpec));

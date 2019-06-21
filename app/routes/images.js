@@ -3,70 +3,53 @@ const database = require('../database');
 const helpers = require('../helpers');
 const { check } = require('express-validator');
 
-/*
-const datachecks = {
-  get: [
-    check('product')
-    .not().isEmpty().withMessage('Product code required.')
-    .isLength({ min:1, max:25 }).withMessage('Product code must be 1-25 characters.')
-    .trim().stripLow(),
-    check('filter').trim().stripLow()
-  ]
-}
-*/
-
 router.get('/', [
-  check('product').not().isEmpty().withMessage('Product code required.')
-  check('product').isLength({ min:1, max:25 }).withMessage('Product should 
-be 1-25 characters.')
+  check('product').not().isEmpty().withMessage('Product code required.'),
+  check('product').isLength({ min:1, max:25 }).withMessage('Product should be 1-25 characters.').trim().stripLow(),
+  check('filter').trim().stripLow()
 ], async (req, res) => {
 
-    if ( !helpers.validationErrors(req, res) ) {
-
-      try {
-
+    try {
+      if ( !helpers.validationErrors(req, res) ) {
         let product = req.query.product;
         let filters = helpers.returnArrayOfWords( req.query.filter );
 
-        let payload = {};
-
         dbData = await database.listImageUrls(product, filters);
 
+        let payload = {};
         payload.rowCount = dbData.rowCount;
         payload.rows = dbData.rows;
+
         res.status(200).send( {success: payload} );
+      }
 
-      } catch ( err ) {
-        helpers.errorPayload( err, res );
-      }      
-    }
-
+    } catch ( err ) {
+      helpers.errorPayload( err, res );
+    }      
 });
 
-router.delete('/:id',  async (req, res) => {
+router.delete('/:id', [
+  check('id').not().isEmpty().withMessage('Id of record to be deleted required.'),
+  check('id').isInt({ gt: 0 }).withMessage('Id expected to be an Integer > 0.'),
+  check('id').trim().stripLow()
+], async (req, res) => {
 
-    if ( !helpers.validationErrors(req, res) ) {
+    try {
+      if ( !helpers.validationErrors(req, res) ) {
 
-      try {
+        let id = req.params.id;console.log('well: ', id);
+        dbData = await database.deleteImage(id);
 
-        let product = req.query.product;
-        let filters = helpers.returnArrayOfWords( 
-req.query.filter );
-
-        let payload = {};
-
-        dbData = await database.listImageUrls(product, 
-filters);
-
-        payload.rowCount = dbData.rowCount;
-        payload.rows = dbData.rows;
-        res.status(200).send( {success: payload} );
-
-      } catch ( err ) {
-        helpers.errorPayload( err, res );
+        if ( dbData.rowCount == 0 ) {
+          helpers.errorPayload('Delete request failed - check ID', res, 422);
+        } else {
+          res.status(204).send( {success: {} } );
+        }
       }
-    }
 
+    } catch ( err ) {
+      helpers.errorPayload( err, res );
+    }      
 });
 
 module.exports = router;

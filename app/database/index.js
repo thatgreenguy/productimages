@@ -11,9 +11,31 @@ database = {};
 database.createImage = function(product, url, meta) {
   return new Promise( async (resolve, reject) => {
 
-    let sql = 'INSERT INTO images (product, url, meta) VALUES($1, $2, $3);'
     try {
+
+      let sql = 'INSERT INTO images (product, url, meta) VALUES($1, $2, $3);'
+
+      console.log('SQL: ', sql)
+
       pool.query( sql, [product, url, values] )
+      .then(res => { resolve( res ) })
+      .catch(err => { reject( err ) })
+      } catch ( err ) {
+        reject (err)
+      }
+  });
+};
+
+database.deleteImage = function(id) {
+  return new Promise( async (resolve, reject) => {
+
+    try {
+
+      let sql = 'DELETE FROM images WHERE id = $1 ;'
+
+      console.debug('SQL: ', sql)
+
+      pool.query( sql, [id] )
       .then(res => { resolve( res ) })
       .catch(err => { reject( err ) })
       } catch ( err ) {
@@ -25,8 +47,12 @@ database.createImage = function(product, url, meta) {
 database.listProducts = function() {
   return new Promise( async (resolve, reject) => {
 
-    let sql = 'SELECT DISTINCT product FROM images;'
     try {
+  
+      let sql = 'SELECT DISTINCT product FROM images;'
+
+      console.debug('SQL: ', sql);
+
       pool.query(sql, [])
       .then(res => { resolve( res ) })
       .catch(err => { reject( err ) })
