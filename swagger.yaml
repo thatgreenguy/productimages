@@ -18,15 +18,11 @@ paths:
       description: |
         Simple API call, no parameters, quickly check your code 
         can connect with this API and get a response back.
+      produces:
+      - "application/json"
       responses:
         '200':    # status code
           description: A JSON object with success and a mesage with 'OK'.
-          content:
-            application/json:
-              schema: 
-                type: object
-                items: 
-                  type: string
   /products:
     get:
       summary: |
@@ -38,29 +34,94 @@ paths:
         it.
         Optionally filter by Product code to check if a Product has any
         images available.
+      produces:
+      - "application/json"
       responses:
         '200':    # status code
           description: A JSON array of product codes
-          content:
-            application/json:
-              schema: 
-                type: array
-                items: 
-                  type: string
   /images:
     get:
-      summary: Returns a list of urls available for a Product code.
+      summary: Returns a list of image urls available for a Product code.
       description: |
         Pass a Product code for a list of all available image urls 
         stored in the system.
         Optionally filter this list by providing one or word filter words
         for example 'left' or 'front left' 
+      produces:
+      - "application/json"
       responses:
         '200':    # status code
           description: A JSON array of image urls
-          content:
-            application/json:
-              schema: 
-                type: array
-                items: 
-                  type: string
+    post:
+      summary: Add a new Image entry with Product code and defining meta keywords such as 'left' or 'front left'.
+      description: |
+        Pass a Product code, image url and one or more meta keyword tags e.g. left or front to describe the image.
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        description: "Image object that needs to be added"
+        schema:
+          $ref: "#/definitions/Images"
+      responses:
+        '201':
+          description: "Created"  
+        '409':   
+          description: "Duplicate key value - Entry already exists."  
+        '422':   
+          description: "Missing parameter value etc."  
+          description: A JSON array of image urls
+  /images/{id}:
+    put:
+      summary: Updates an image entry by Id.
+      description: |
+        Pass a Product code for a list of all available image urls 
+        stored in the system.
+        Optionally filter this list by providing one or word filter words
+        for example 'left' or 'front left' 
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Id of product/image entry you want to update"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updates to images object"
+        required: true
+        schema:
+          $ref: "#/definitions/Images"
+      responses:
+        '200':    # status code
+          description: A JSON array of image urls
+    delete:
+      summary: Deletes an image entry by Id.
+      description: |
+        Pass a Product code for a list of all available image urls 
+        stored in the system.
+        Optionally filter this list by providing one or word filter words
+        for example 'left' or 'front left' 
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Id of product/image entry you want to update"
+        required: true
+        type: "string"
+      responses:
+        '200':
+          description: A JSON array of image urls
+definitions:
+  Images:
+    type: "Object"
+    properties:
+      id:
+        typs: "integer"
+        format: "int64"
+      product:
+        type: "string"
+      url:
+        type: "string"
+      meta:
+        type: "string"
+    json:
+      name: "Images"
