@@ -17,7 +17,7 @@ database.createImage = function(product, url, meta) {
 
       console.log('SQL: ', sql)
 
-      pool.query( sql, [product, url, values] )
+      pool.query( sql, [product, url, meta] )
       .then(res => { resolve( res ) })
       .catch(err => { reject( err ) })
       } catch ( err ) {
@@ -36,6 +36,24 @@ database.deleteImage = function(id) {
       console.debug('SQL: ', sql)
 
       pool.query( sql, [id] )
+      .then(res => { resolve( res ) })
+      .catch(err => { reject( err ) })
+      } catch ( err ) {
+        reject (err)
+      }
+  });
+};
+
+database.updateImage = function(id, product, url, meta) {
+  return new Promise( async (resolve, reject) => {
+
+    try {
+
+      let sql = 'UPDATE images SET product = $2, url = $3, meta = $4 WHERE id = $1 ;'
+
+      console.debug('SQL: ', sql)
+
+      pool.query( sql, [id, product, url, meta] )
       .then(res => { resolve( res ) })
       .catch(err => { reject( err ) })
       } catch ( err ) {

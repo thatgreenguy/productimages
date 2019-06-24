@@ -1,20 +1,29 @@
 const config = require('../config');
 const { validationResult } = require('express-validator');
 
+const statusCodes = { '23505': 409 }
+
 helpers = {}
 
-helpers.errorPayload = function( err, res, status = 400 ) {
+// Trap and handle program errors and database errors
+helpers.errorPayload = function( err, res, status = 500 ) {
 
-  let payload = {};
+  status =  typeof statusCodes[err.code] !== 'undefined' ? statusCodes[err.code] : status
 
-  if ( config.node_env == 'development' ) {
-    payload.error = {errors: err};
-  } else {
-    payload.error = {errors: `API Request call failed. Possibly a temporary problem or badly formed request. Try again after checking ../docs and the 
-details of your request. If the problem persists contact support.`};
-  }
+  let payload = {error: {
+    message: err.message,
+    code: err.code,    
+    detail: err.detail
+    }
+  };
 
-  res.status(status).json( payload );
+  if ( status == 500 ) payload.error.info = `Unexpected Internal Error - API Request call failed. \
+      This could be due to a temporary problem but is most likely a program error. \
+      Check the ../docs and try again - if the problem persists contact support.`;
+
+  if ( config.node_env == 'development' ) payload.error.stack = err.stack;
+
+  res.status(status).send( payload );
 
 }
 
