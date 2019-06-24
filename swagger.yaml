@@ -9,7 +9,7 @@ info:
     filtered on keywords such as 'left', 'right' or a combination e.g. 
     'front middle left'. 
 servers:
-  - url: http://jdocker01.dlinkjde.int:8080/api/v1/productimageso
+  - url: http://jdocker01.dlinkjde.int:8080/api/v1/productimages
 paths:
   /ping:
     get: 
