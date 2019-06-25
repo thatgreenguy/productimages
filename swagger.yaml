@@ -23,46 +23,42 @@ paths:
       responses:
         '200':    # status code
           description: A JSON object with success and a mesage with 'OK'.
+
   /products:
     get:
       summary: |
-        Returns a unique list of Products for which image urls are 
-        available.
+        Returns a distinct list of all Products which have at least one image url available.
       description: | 
-        Returns a distinct list of product codes stored in this 
-        system. Each entry will have 1 or more image urls associated with 
-        it.
-        Optionally filter by Product code to check if a Product has any
-        images available.
+        Returns a distinct list of all product codes stored in this 
+        system where a product code has at least one image url available.
       produces:
       - "application/json"
       responses:
         '200':    # status code
           description: A JSON array of product codes
+
   /images:
-    get:
-      summary: Returns a list of image urls available for a Product code.
-      description: |
-        Pass a Product code for a list of all available image urls 
-        stored in the system.
-        Optionally filter this list by providing one or word filter words
-        for example 'left' or 'front left' 
-      produces:
-      - "application/json"
-      responses:
-        '200':    # status code
-          description: A JSON array of image urls
     post:
       summary: Add a new Image entry with Product code and defining meta keywords such as 'left' or 'front left'.
       description: |
         Pass a Product code, image url and one or more meta keyword tags e.g. left or front to describe the image.
-      parameters:
-      - in: "body"
-        name: "body"
+      requestBody:
         required: true
-        description: "Image object that needs to be added"
-        schema:
-          $ref: "#/definitions/Images"
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                product:          	# <!--- form field name
+                  type: string
+                image:   			# <!--- form field name
+                  type: string
+                meta:    		# <!--- form field name
+                  type: string
+              required:
+                - product
+                - image      
+                - meta      
       responses:
         '201':
           description: "Created"  
@@ -71,6 +67,31 @@ paths:
         '422':   
           description: "Missing parameter value etc."  
           description: A JSON array of image urls
+
+    get:
+      summary: Returns a list of image urls available for a Product code.
+      description: |
+        Pass a Product code for a list of all available image urls 
+        stored in the system.
+        Optionally filter this list by providing one or word filter words
+        for example 'left' or 'front left' 
+      parameters:
+      - in: query
+        name: product
+        schema:
+          type: string
+        required: true
+        description: Product code of image urls to get
+      - in: query
+        name: filter
+        schema:
+          type: string
+        required: false
+        description: Optional meta keyword filters to restrict results e.g. 'Left' or 'bak right'
+      responses:
+        '200':    # status code
+          description: A JSON array of image urls
+
   /images/{id}:
     put:
       summary: Updates an image entry by Id.
@@ -80,20 +101,15 @@ paths:
         Optionally filter this list by providing one or word filter words
         for example 'left' or 'front left' 
       parameters:
-      - name: "id"
-        in: "path"
-        description: "Id of product/image entry you want to update"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updates to images object"
+      - in: path
+        name: id
+        description: Id of product/image entry you want to update
         required: true
         schema:
-          $ref: "#/definitions/Images"
-      responses:
+          type: string
         '200':    # status code
           description: A JSON array of image urls
+
     delete:
       summary: Deletes an image entry by Id.
       description: |
@@ -102,14 +118,17 @@ paths:
         Optionally filter this list by providing one or word filter words
         for example 'left' or 'front left' 
       parameters:
-      - name: "id"
-        in: "path"
-        description: "Id of product/image entry you want to update"
+      - in: path
+        name: id
+        description: Id of product/image entry you want to delete
         required: true
-        type: "string"
+        schema:
+          type: string
       responses:
-        '200':
-          description: A JSON array of image urls
+        '204':
+          description: Deleted - no content returned
+        '422':
+          description: Error with parameters values see error messages in response 
 definitions:
   Images:
     type: "Object"

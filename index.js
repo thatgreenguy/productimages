@@ -26,8 +26,12 @@ app.get(swaggerPath, (req, res) => {
   res.status(200).json(swaggerSpec);
 });
 
-app.use(function(req, res){ res.status(400).json({error: {errors: 'Route Not Found - check the ../docs'}} ); });
-app.use(function(error, req, res, next){ res.status(500).json({error: 'Internal Server Error', errors: error}); });
+app.use(function(req, res) {
+  res.status(400).json({error: {errors: 'Route or method not supported - Please check the ../productimages/docs'}} );
+ });
+app.use(function(error, req, res, next) {
+  res.status(500).json({error: 'Internal Server Error', errors: error}); 
+});
 
 app.listen(api_port, () => { 
   console.log('Listening on port: ' + api_port);
