@@ -107,8 +107,28 @@ paths:
         required: true
         schema:
           type: string
-        '200':    # status code
-          description: A JSON array of image urls
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                product:          	# <!--- form field name
+                  type: string
+                image:   			# <!--- form field name
+                  type: string
+                meta:    		# <!--- form field name
+                  type: string
+              required:
+                - product
+                - image      
+                - meta      
+      responses:
+        '204':    # status code
+          description: Update confirmed - no content returned
+        '422':
+          description: Error with parameters values see error messages in response 
 
     delete:
       summary: Deletes an image entry by Id.
@@ -126,7 +146,7 @@ paths:
           type: string
       responses:
         '204':
-          description: Deleted - no content returned
+          description: Delete confirmed - no content returned
         '422':
           description: Error with parameters values see error messages in response 
 definitions:

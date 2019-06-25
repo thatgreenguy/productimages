@@ -57,7 +57,7 @@ router.post('/', [
 
 router.delete('/:id', [
   check('id').not().isEmpty().withMessage('Id of record to be deleted required.'),
-  check('id').isInt({ gt: 0 }).withMessage('Id expected to be an Integer > 0.'),
+  check('id').isInt({ min: 1, max: 2147483647 }).withMessage('Id expected to be an Integer in range: 1 - 2147483647.'),
   check('id').trim().stripLow()
 ], async (req, res) => {
 
@@ -80,7 +80,7 @@ router.delete('/:id', [
 
 router.put('/:id', [
   check('id').not().isEmpty().withMessage('Id of record to be updated required.'),
-  check('id').isInt({ gt: 0 }).withMessage('Id expected to be an Integer > 0.'),
+  check('id').isInt({ min: 1, max: 2147483647 }).withMessage('Id expected to be an Integer in range: 1 - 2147483647.'),
   check('id').trim().stripLow(),
   check('product').not().isEmpty().withMessage('Product code required.'),
   check('product').isLength({ min:1, max:25 }).withMessage('Product should be 1-25 characters.').trim().stripLow(),
